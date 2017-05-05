@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "actionmap.h"
 #include "action_code.h"
+#include "keymap.h"
 #include "tobi_keypad.h"
 #include "action_layer.h"
 #include <string.h>
@@ -29,9 +30,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "print.h"
 
 // ACTION DEFINITIONS ----------------------------------------------------------------------------------------
+
+//	#define ACTION_KEY_2	
+	#define AC_LAY0		ACTION_LAYER_SET_CLEAR(0)
 	#define AC_JPKP		ACTION_LAYER_TOGGLE(1)
 	#define AC_ENKP		ACTION_LAYER_TOGGLE(2)
-	#define AC_MAGI		ACTION_LAYER_MOMENTARY(31)	
+	#define AC_GAMW		ACTION_LAYER_SET_CLEAR(28)
+	#define AC_GAMA		ACTION_LAYER_SET_CLEAR(29)
+	#define AC_LAYR		ACTION_LAYER_MOMENTARY(30)	
+	#define AC_MAGI		ACTION_LAYER_TAP_KEY(31, KC_PENT)	
+	#define AC_MAKI		ACTION_MODS(MOD_LALT | MOD_LSFT)	
 
 	#define AC_FPSC		ACTION_FUNCTION(FPSC)
 	#define AC_FPBK		ACTION_FUNCTION(FPBK)
@@ -51,7 +59,7 @@ int global_prev = 999;
 int global_tap_count = 0;
 FPKPSC[] =	{KC_SPACE};
 FPKPBK[] =	{KC_BSPACE};
-FPKPSF[] =	{KC_LSHIFT};
+FPKPSF[] =	{KC_LSFT};
 FPKPEN[] =	{KC_ENTER};
 ENKP1[] =	{};
 ENKP2[] =	{KC_A, KC_B, KC_C};
@@ -82,7 +90,6 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
 		flipkey(record, FPKPSC);
 	} 
 	else if (id == FPBK){
-		while(record->tap.count = 1){dprintf("hai");}
 		flipprev(FPBK);
 		global_tap_count = 0;
 		flipkey(record, FPKPBK);
@@ -134,7 +141,6 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
 		flipkey(record, ENKP9);
 	} 
 
-
 };
 
 void flipprev(int current){
@@ -165,6 +171,7 @@ void flipkey(keyrecord_t *record, int arr[]){
 			
 		}
 		if (global_tap_count == 0){
+			
 			add_key(arr[global_tap_count]);
 			send_keyboard_report();
 			del_key(arr[global_tap_count]);
@@ -216,8 +223,8 @@ const action_t PROGMEM actionmaps[][MATRIX_ROWS][MATRIX_COLS] = {
     NLCK,PSLS,PAST,PMNS,         \
     P7,  P8,  P9,  PPLS,         \
     P4,  P5,  P6,  ENKP,         \
-    P1,  P2,  P3,  RSFT,         \
-    P0,  BSPC,MAGI,PENT),        
+    P1,  P2,  P3,  LAYR,         \
+    P0,  BSPC,PDOT,MAGI),        
 
 // LAYER 1: ---------------------\
       ,-------------------.      \
@@ -267,6 +274,78 @@ const action_t PROGMEM actionmaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ENK7,ENK8,ENK9,FPSF,         \
     FPSC,FPBK,PDOT,FPEN),        
 
+// LAYER 28: ---------------------\
+      ,-------------------.      \
+      |                   |      \
+      |                   |      \
+      | ,---------------. |      \
+      | |NUM| / | * | - | |      \
+      | |---------------| |      \
+      | | 7 | 8 | 9 | + | |      \
+      | |---------------| |      \
+      | | 4 | 5 | 6 |PGU| |      \
+      | |---------------| |      \
+      | | 1 | 2 | 3 |PGD| |      \
+      | |---------------| |      \
+      | | 0 |BS | . |ENT| |      \
+      | `---------------' |      \
+      `-------------------'      \
+                                  
+  [28] = ACTIONMAP_tobi_keypad(  \
+    1,   2,   3,   4,            \
+    ESC, Q,   W,   R,            \
+    F,   A,   S,   D,            \
+    LSFT,NO,  NO,  C,            \
+    NO,  GAMA,LAY0,SPC),        
+
+// LAYER 29: ---------------------\
+      ,-------------------.      \
+      |                   |      \
+      |                   |      \
+      | ,---------------. |      \
+      | |NUM| / | * | - | |      \
+      | |---------------| |      \
+      | | 7 | 8 | 9 | + | |      \
+      | |---------------| |      \
+      | | 4 | 5 | 6 |PGU| |      \
+      | |---------------| |      \
+      | | 1 | 2 | 3 |PGD| |      \
+      | |---------------| |      \
+      | | 0 |BS | . |ENT| |      \
+      | `---------------' |      \
+      `-------------------'      \
+                                  
+  [29] = ACTIONMAP_tobi_keypad(  \
+    1,   2,   3,   4,            \
+    ESC, UP,  NO,  NO,           \
+    LEFT,DOWN,RGHT,NO,           \
+    NO,  NO,  NO,  NO,           \
+    SPC, GAMW,LAY0,NO),        
+
+// LAYER 30: ---------------------\
+      ,-------------------.      \
+      |                   |      \
+      |                   |      \
+      | ,---------------. |      \
+      | |NUM| / | * | - | |      \
+      | |---------------| |      \
+      | | 7 | 8 | 9 | + | |      \
+      | |---------------| |      \
+      | | 4 | 5 | 6 |PGU| |      \
+      | |---------------| |      \
+      | | 1 | 2 | 3 |PGD| |      \
+      | |---------------| |      \
+      | | 0 |BS | . |ENT| |      \
+      | `---------------' |      \
+      `-------------------'      \
+                                  
+  [30] = ACTIONMAP_tobi_keypad(  \
+    NO,  NO,  NO,  NO,           \
+    GAMW,GAMA,NO,  NO,           \
+    NO,  NO,  NO,  NO,           \
+    NO,  NO,  NO,  TRNS,         \
+    NO,  NO,  NO,  NO),        
+
 // LAYER 31: ---------------------\
       ,-------------------.      \
       |                   |      \
@@ -286,9 +365,9 @@ const action_t PROGMEM actionmaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                   
   [31] = ACTIONMAP_tobi_keypad(  \
     NO,  NO,  NO,  NO,           \
+    NO,  Q,   H,   NO,           \
+    NO,  D,   C,   K,            \
     NO,  NO,  NO,  NO,           \
-    NO,  C,   D,   K,            \
-    NO,  H,   LSFT,RSFT,         \
-    NO,  NO,  MAGI,PENT),        
+    MAKI,NO,  NO,  MAGI),        
 
 };
